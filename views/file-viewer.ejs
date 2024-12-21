@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Root</title>
+  </head>
+  <body>
+    <h1>Files</h1>
+    <% if (parentFolder) { %>
+    <ul>
+      <% parentFolder.folders.forEach(function(file) { %>
+      <li>
+        <a href="/files?filePath=<%= `{currentPath}/{file.name}`%>">
+          <%= `📁 {file.name}` %>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign-up</title>
+  </head>
+  <body>
+    <main
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        margin-top: 60px;
+      "
+    >
+      <%- include('partials/errors.ejs') %>
+      <h1>Sign-up</h1>
+      <form
+        action="/sign-up"
+        method="post"
+        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px"
+      >
+        <label for="username">Username: </label>
+        <input type="text" id="username" name="username" />
+        <label for="password">Password: </label>
+        <input type="password" id="password" name="password" />
+        <button type="submit" style="grid-column: 1 / -1">confirm</button>
+      </form>
+    </main>
+  </body>
+</html>
