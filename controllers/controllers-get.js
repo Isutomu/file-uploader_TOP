@@ -9,8 +9,8 @@ module.exports.renderSignUp = asyncHandler(async (req, res) => {
 });
 
 module.exports.renderHomepage = asyncHandler(async (req, res) => {
-  if (req.currentUser) {
-    res.render("files");
+  if (req.user?.id) {
+    return res.render("file-viewer");
   }
 
   res.redirect("/log-in");

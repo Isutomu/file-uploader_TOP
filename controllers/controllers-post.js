@@ -2,12 +2,13 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const { PrismaClient } = require("@prisma/client");
+const passport = require("passport");
 
 const prisma = new PrismaClient();
 
 const lengthErrEmail = "must have 30 characters at max.";
 const lengthErrPassword = "must be between 8 and 16 characters.";
-const validateNewUser = [
+const validateUser = [
   body("email").isLength({ max: 30 }).withMessage(`E-mail ${lengthErrEmail}`),
   body("password")
     .isAlphanumeric()
@@ -17,7 +18,7 @@ const validateNewUser = [
 ];
 
 module.exports.addUser = [
-  validateNewUser,
+  validateUser,
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,5 +37,21 @@ module.exports.addUser = [
       });
     });
     res.redirect("/");
+  }),
+];
+
+module.exports.logIn = [
+  validateUser,
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("log-in", { errors: errors.array() });
+    }
+
+    next();
+  }),
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/log-in",
   }),
 ];

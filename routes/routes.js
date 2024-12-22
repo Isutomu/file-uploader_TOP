@@ -8,7 +8,7 @@ routes.get("/", controllersGet.renderHomepage);
 routes.get("/log-in", controllersGet.renderLogIn);
 routes.get("/sign-up", controllersGet.renderSignUp);
 
-// routes.post("/log-in", controllersPost.addUser);
+routes.post("/log-in", controllersPost.logIn);
 routes.post("/sign-up", controllersPost.addUser);
 
 module.exports = routes;
