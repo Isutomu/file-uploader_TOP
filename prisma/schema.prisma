@@ -20,3 +20,20 @@ model Session {
   data      String   @db.Text
   expiresAt DateTime
 }
+
+model Folder {
+  id              String   @id @default(uuid())
+  name            String
+  files           File[]
+  childrenFolders Folder[] @relation("ChildrenFolders")
+  parentFolder    Folder?  @relation("ChildrenFolders", fields: [parentFolderId], references: [id])
+  parentFolderId  String?
+}
+
+model File {
+  id       String @id @default(uuid())
+  name     String
+  url      String
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId String
+}

@@ -3,8 +3,26 @@ const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const { PrismaClient } = require("@prisma/client");
 const passport = require("passport");
+const multer = require("multer");
+const { randomBytes } = require("node:crypto");
 
 const prisma = new PrismaClient();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const extension = file.originalname.split(".")[1];
+    const newName = randomBytes(64).toString("hex");
+    const newFullName = `${newName}.${extension}`;
+
+    file.newName = newFullName;
+    req.uploadedFile = file;
+
+    cb(null, newFullName);
+  },
+});
+const upload = multer({ storage: storage });
 
 const lengthErrEmail = "must have 30 characters at max.";
 const lengthErrPassword = "must be between 8 and 16 characters.";
@@ -53,5 +71,27 @@ module.exports.logIn = [
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/log-in",
+  }),
+];
+
+module.exports.uploadFile = [
+  asyncHandler(async (req, res, next) => {
+    if (!req.user?.id) {
+      return res.status(401).redirect("/");
+    }
+
+    next();
+  }),
+  upload.single("file"),
+  asyncHandler(async (req, res) => {
+    await prisma.file.create({
+      data: {
+        name: req.file.originalname,
+        url: `./uploads/${req.file.newName}`,
+        folderId: req.body.folderId,
+      },
+    });
+
+    res.redirect("/");
   }),
 ];
