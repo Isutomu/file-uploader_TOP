@@ -31,7 +31,7 @@
     <ul>
       <% files.forEach(function(file) { %>
       <li>
-        <a href="/file?fileId=<%= `${file.id}`%>">
+        <a href="/file/<%= file.id %>">
           <%= `📄 ${file.name}` %>
         </a>
       </li>

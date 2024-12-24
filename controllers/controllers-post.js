@@ -5,6 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const passport = require("passport");
 const multer = require("multer");
 const { randomBytes } = require("node:crypto");
+const path = require("path");
 
 const prisma = new PrismaClient();
 const storage = multer.diskStorage({
@@ -84,10 +85,14 @@ module.exports.uploadFile = [
   }),
   upload.single("file"),
   asyncHandler(async (req, res) => {
+    const rootPath = path
+      .join(__dirname, req.file.path)
+      .replace("/controllers", "");
     await prisma.file.create({
       data: {
         name: req.file.originalname,
-        url: `./uploads/${req.file.newName}`,
+        url: rootPath,
+        size: `${Math.round(req.file.size / 1024)} kB`,
         folderId: req.body.folderId,
       },
     });

@@ -31,7 +31,6 @@ module.exports.renderHomepage = asyncHandler(async (req, res) => {
 
 module.exports.renderFolder = asyncHandler(async (req, res) => {
   if (req.user?.id) {
-    console.log(req.params.folderId);
     const folder = await prisma.folder.findFirst({
       where: { id: req.params.folderId },
       include: { files: true, childrenFolders: true },
@@ -45,4 +44,32 @@ module.exports.renderFolder = asyncHandler(async (req, res) => {
   }
 
   res.redirect("/log-in");
+});
+
+module.exports.renderFile = asyncHandler(async (req, res) => {
+  if (req.user?.id) {
+    const file = await prisma.file.findFirst({
+      where: { id: req.params.fileId },
+    });
+    return res.render("file-details", {
+      fileName: file.name,
+      fileDate: file.createdAt,
+      fileSize: file.size,
+      fileId: file.id,
+    });
+  }
+
+  res.redirect("/log-in");
+});
+
+module.exports.downloadFile = asyncHandler(async (req, res) => {
+  if (!req.user?.id) {
+    return res.redirect("/log-in");
+  }
+
+  const file = await prisma.file.findFirst({
+    where: { id: req.params.fileId },
+    select: { url: true },
+  });
+  res.download(file.url);
 });

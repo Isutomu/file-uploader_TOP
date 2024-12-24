@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File</title>
+  </head>
+  <body>
+    <h1 style="margin: 15px 30px"><%= fileName%></h1>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: start;
+        margin: 15px 30px;
+      "
+    >
+      <span><%= fileDate%></span>
+      <span><%= fileSize%></span>
+      <button>
+        <a href="/download/<%= fileId %>" style="text-decoration: none"
+          >Download</a
+        >
+      </button>
+    </div>
+  </body>
+</html>
