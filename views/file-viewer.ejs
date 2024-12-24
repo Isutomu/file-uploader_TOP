@@ -6,12 +6,21 @@
     <title>Root</title>
   </head>
   <body>
-    <h1>Files</h1>
+    <%- include('partials/errors.ejs') %>
+    <header style='display: flex; justify-content: space-between; align-items: center ;margin: 15px 30px;'>
+      <h1><%= folderName%></h1>
+      <form action="/createFolder" method="post">
+        <label for="newFolderName">New Folder: </label>
+        <input type="text" id="newFolderName" name="newFolderName">
+        <input type="hidden" name="folderId" value=<%= folderId %>>
+        <button type="submit">Create Folder</button>
+      </form>
+    </header>
     <% if (locals.folders) { %>
       <ul>
         <% folders.forEach(function(folder) { %>
         <li>
-          <a href="/folder?folderId=<%= `${folder.id}`%>">
+          <a href="/folder/<%= folder.id %>">
             <%= `📁 ${folder.name}` %>
           </a>
         </li>

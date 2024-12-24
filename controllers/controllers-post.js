@@ -95,3 +95,28 @@ module.exports.uploadFile = [
     res.redirect("/");
   }),
 ];
+
+const lengthErrFolderName = "must be between 1 and 30 characters.";
+const validateFolderName = body("newFolderName")
+  .trim()
+  .isLength({ min: 1, max: 30 })
+  .withMessage(`File name ${lengthErrFolderName}`)
+  .isAlphanumeric()
+  .withMessage("Folder name must contain only numbers and letters.");
+module.exports.createFolder = [
+  validateFolderName,
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).render("/", { errors: errors.array() });
+    }
+
+    await prisma.folder.create({
+      data: {
+        name: req.body.newFolderName,
+        parentFolderId: req.body.folderId,
+      },
+    });
+    res.redirect(`/?folderId=${req.body.folderId}`);
+  }),
+];
